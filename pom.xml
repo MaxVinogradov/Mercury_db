@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>test</groupId>
+    <artifactId>test</artifactId>
+    <version>0.1</version>
+
+    <properties>
+        <!-- Compile -->
+        <compiler-plugin.version>3.5.1</compiler-plugin.version>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Libraries versions -->
+        <classindex.version>3.4</classindex.version>
+        <commons-lang3.version>3.0</commons-lang3.version>
+        <junit.version>4.12</junit.version>
+        <pitest-maven.version>1.1.10</pitest-maven.version>
+        <logback.version>1.1.7</logback.version>
+        <slf4j.version>1.7.16</slf4j.version>
+        <testng.version>6.9.10</testng.version>
+        <!-- Java code/tests analysis-->
+        <coveralls.version>4.1.0</coveralls.version>
+        <jacoco.version>0.7.6.201602180812</jacoco.version>
+        <pmd.version>3.6</pmd.version>
+        <!-- Database -->
+        <h2.version>1.4.191</h2.version>
+        <liquibase-maven-plugin.version>3.5.0</liquibase-maven-plugin.version>
+        <ojdbc6.version>11.2.0.3</ojdbc6.version>
+        <!-- Other -->
+        <surefire.plugin.version>2.14.1</surefire.plugin.version>
+
+
+
+        <liquibase.goal>update</liquibase.goal>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>appdb</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <database.url>jdbc:oracle:thin:@//127.0.0.1:1521/XE</database.url>
+                <database.user>social_publisher1</database.user>
+                <database.password>0000</database.password>
+                <database.contexts>XE</database.contexts>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-maven-plugin</artifactId>
+            <version>${liquibase-maven-plugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>${ojdbc6.version}</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>codelds</id>
+            <url>https://code.lds.org/nexus/content/groups/main-repo</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase-maven-plugin.version}</version>
+                <configuration>
+                    <changeLogFile>src/main/resources/db.changelog.xml</changeLogFile>
+                    <driver>oracle.jdbc.driver.OracleDriver</driver>
+                    <url>jdbc:oracle:thin:@//127.0.0.1:1521/XE</url>
+                    <username>${database.user}</username>
+                    <password>${database.password}</password>
+                    <contexts>${database.contexts}</contexts>
+                    <dropFirst>true</dropFirst>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>appdb</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <contexts>${database.contexts}
+                            </contexts>
+                            <url>${database.url}</url>
+                            <username>${database.user}</username>
+                            <password>${database.password}
+                            </password>
+                        </configuration>
+                        <goals>
+                            <goal>${liquibase.goal}</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>3.0.5</version>
+                    <configuration>
+                        <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>update</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.pitest</groupId>
+                    <artifactId>pitest-maven</artifactId>
+                    <version>1.1.10</version>
+                    <configuration>
+                        <targetTests>
+                            <param>p1.test.*</param>
+                        </targetTests>
+                        <targetClasses>
+                            <param>p1.test.*</param>
+                        </targetClasses>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+-->
+</project>
