@@ -15,6 +15,12 @@
             <column name="password" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="mail" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birthday" type="date">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createIndex tableName="users" indexName="users_i">
